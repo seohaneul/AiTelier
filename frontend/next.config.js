@@ -3,8 +3,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://craftai-backend.onrender.com/api/:path*',
+        source: '/proxy/:path*',
+        destination: 'https://craftai-backend.onrender.com/:path*',
       },
     ];
   },

@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    const baseUrl = '/api/v1';
+    const baseUrl = '/proxy/api/v1';
     const endpoint = isLogin ? '/auth/login' : '/auth/register';
     setStatus('인증 진행 중...');
 
