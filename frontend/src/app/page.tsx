@@ -12,11 +12,12 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+    const endpoint = isLogin ? '/auth/login' : '/auth/register';
     setStatus('인증 진행 중...');
 
     try {
-      const res = await fetch(`http://localhost:8081${endpoint}`, {
+      const res = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, role: 'COMPANY' })

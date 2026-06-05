@@ -30,7 +30,8 @@ export default function CustomerPage() {
     const comName = localStorage.getItem('username');
     if (comName) {
       setUsername(comName);
-      fetch(`http://localhost:8081/api/v1/templates/${comName}`)
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+      fetch(`${baseUrl}/templates/${comName}`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) {
@@ -97,7 +98,8 @@ export default function CustomerPage() {
       formData.append('leatherImage', myImage);
       formData.append('templateImageUrl', selectedTemplate.s3OriginalImageUrl);
 
-      const res = await fetch(`http://localhost:8081/api/v1/orders/visualize`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+      const res = await fetch(`${baseUrl}/orders/visualize`, {
         method: 'POST',
         body: formData
       });

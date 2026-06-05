@@ -25,8 +25,9 @@ export default function AdminDashboard() {
   }, []);
 
   const fetchTemplates = async (userId: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
     try {
-      const res = await fetch(`http://localhost:8081/api/v1/templates/${userId}`);
+      const res = await fetch(`${baseUrl}/templates/${userId}`);
       if (res.ok) {
         setTemplates(await res.json());
       }
@@ -51,8 +52,9 @@ export default function AdminDashboard() {
     formData.append('templateName', editName);
     if (editImage) formData.append('image', editImage);
 
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
     try {
-      const res = await fetch(`http://localhost:8081/api/v1/templates/${selectedTemplate.id}`, {
+      const res = await fetch(`${baseUrl}/templates/${selectedTemplate.id}`, {
         method: 'PUT',
         body: formData
       });
@@ -73,8 +75,9 @@ export default function AdminDashboard() {
     if (!selectedTemplate) return;
     if (!confirm('템플릿을 영구적으로 삭제하시겠습니까?')) return;
 
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
     try {
-      const res = await fetch(`http://localhost:8081/api/v1/templates/${selectedTemplate.id}`, { method: 'DELETE' });
+      const res = await fetch(`${baseUrl}/templates/${selectedTemplate.id}`, { method: 'DELETE' });
       if (res.ok) {
         setTemplates(templates.filter(t => t.id !== selectedTemplate.id));
         setSelectedTemplate(null);
