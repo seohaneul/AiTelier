@@ -37,7 +37,7 @@ export default function UploadTemplatePage() {
     formData.append('templateName', templateName);
     formData.append('image', image);
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craft-ai-backend-nu9o.onrender.com/api/v1';
     try {
       const res = await fetch(`${baseUrl}/templates/upload`, {
         method: 'POST',

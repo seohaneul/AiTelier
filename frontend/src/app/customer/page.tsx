@@ -30,7 +30,7 @@ export default function CustomerPage() {
     const comName = localStorage.getItem('username');
     if (comName) {
       setUsername(comName);
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craft-ai-backend-nu9o.onrender.com/api/v1';
       fetch(`${baseUrl}/templates/${comName}`)
         .then(res => res.json())
         .then(data => {
@@ -98,7 +98,7 @@ export default function CustomerPage() {
       formData.append('leatherImage', myImage);
       formData.append('templateImageUrl', selectedTemplate.s3OriginalImageUrl);
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craft-ai-backend-nu9o.onrender.com/api/v1';
       const res = await fetch(`${baseUrl}/orders/visualize`, {
         method: 'POST',
         body: formData
