@@ -23,7 +23,12 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("message", "이미 존재하는 아이디입니다"));
         }
         AppUser savedUser = userRepository.save(user);
-        return ResponseEntity.ok(Map.of("message", "회원가입 완료", "role", savedUser.getRole(), "username", savedUser.getUsername()));
+        return ResponseEntity.ok(Map.of(
+            "message", "회원가입 완료", 
+            "role", savedUser.getRole(), 
+            "username", savedUser.getUsername(),
+            "companyName", savedUser.getCompanyName() != null ? savedUser.getCompanyName() : savedUser.getUsername()
+        ));
     }
 
     @PostMapping("/login")
@@ -34,7 +39,8 @@ public class AuthController {
             return ResponseEntity.ok(Map.of(
                 "message", "로그인 성공",
                 "username", foundUser.getUsername(),
-                "role", foundUser.getRole()
+                "role", foundUser.getRole(),
+                "companyName", foundUser.getCompanyName() != null ? foundUser.getCompanyName() : foundUser.getUsername()
             ));
         }
         return ResponseEntity.status(401).body(Map.of("message", "아이디 또는 비밀번호가 틀렸습니다"));
