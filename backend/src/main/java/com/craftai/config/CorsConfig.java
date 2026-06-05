@@ -15,8 +15,9 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                "https://ai-telier.vercel.app",
+        // allowedOriginPatterns로 Vercel 모든 서브도메인(프리뷰 포함) 허용
+        config.setAllowedOriginPatterns(List.of(
+                "https://*.vercel.app",
                 "http://localhost:3000"
         ));
 
