@@ -12,8 +12,8 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    const baseUrl = '/proxy/api/v1';
-    const endpoint = isLogin ? '/auth/login' : '/auth/register';
+    const baseUrl = '/api/auth';
+    const endpoint = isLogin ? '/login' : '/register';
     setStatus('인증 진행 중...');
 
     try {
