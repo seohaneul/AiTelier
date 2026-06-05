@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api/v1';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craftai-backend.onrender.com/api/v1';
     const endpoint = isLogin ? '/auth/login' : '/auth/register';
     setStatus('인증 진행 중...');
 
