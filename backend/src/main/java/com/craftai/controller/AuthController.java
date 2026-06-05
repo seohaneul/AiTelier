@@ -45,4 +45,25 @@ public class AuthController {
         }
         return ResponseEntity.status(401).body(Map.of("message", "아이디 또는 비밀번호가 틀렸습니다"));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProfile(@RequestBody AppUser updateRequest) {
+        Optional<AppUser> userOpt = userRepository.findByUsername(updateRequest.getUsername());
+        if (!userOpt.isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "존재하지 않는 공방 계정입니다"));
+        }
+        AppUser user = userOpt.get();
+        if (updateRequest.getCompanyName() != null && !updateRequest.getCompanyName().trim().isEmpty()) {
+            user.setCompanyName(updateRequest.getCompanyName());
+        }
+        if (updateRequest.getPassword() != null && !updateRequest.getPassword().trim().isEmpty()) {
+            user.setPassword(updateRequest.getPassword());
+        }
+        AppUser updatedUser = userRepository.save(user);
+        return ResponseEntity.ok(Map.of(
+            "message", "공방 환경 설정이 수정되었습니다",
+            "username", updatedUser.getUsername(),
+            "companyName", updatedUser.getCompanyName()
+        ));
+    }
 }

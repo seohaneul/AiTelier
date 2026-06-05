@@ -5,15 +5,16 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function PortalPage() {
-  const [username, setUsername] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     const user = localStorage.getItem('username');
+    const company = localStorage.getItem('companyName');
     if (!user) {
       router.push('/');
     } else {
-      setUsername(user);
+      setCompanyName(company || user);
     }
   }, [router]);
 
@@ -22,7 +23,7 @@ export default function PortalPage() {
       <div className="at-viewport at-animate-fade-up">
         <header className="at-text-center at-mb-12">
           <h1 className="serif at-h1 at-mb-12">
-            Welcome to <span className="at-gradient-text">{username}</span> AiTelier
+            Welcome to <span className="at-gradient-text">{companyName}</span> AiTelier
           </h1>
           <p className="at-desc">디지털로 확장되는 가죽 공예의 새로운 가능성</p>
         </header>

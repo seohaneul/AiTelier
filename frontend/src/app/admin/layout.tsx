@@ -22,6 +22,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/upload" className={`at-nav-item ${pathname === '/admin/upload' ? 'active' : ''}`}>
             새 디자인 등록
           </Link>
+          <Link href="/admin/settings" className={`at-nav-item ${pathname === '/admin/settings' ? 'active' : ''}`}>
+            공방 설정
+          </Link>
         </nav>
 
         <div style={{ marginTop: 'auto' }}>

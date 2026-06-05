@@ -9,13 +9,15 @@ export default function LoginPage() {
   const [companyName, setCompanyName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     const baseUrl = '/api/auth';
     const endpoint = isLogin ? '/login' : '/register';
-    setStatus('인증 진행 중...');
+    setStatus('');
+    setIsLoading(true);
 
     try {
       const payload = isLogin 
@@ -36,9 +38,11 @@ export default function LoginPage() {
         router.push('/portal');
       } else {
         setStatus(data.message || '인증에 실패했습니다.');
+        setIsLoading(false);
       }
     } catch (err) {
       setStatus('서버 연결에 실패했습니다.');
+      setIsLoading(false);
     }
   };
 
@@ -81,8 +85,12 @@ export default function LoginPage() {
           
           {status && <div className="at-text-center" style={{ color: '#ef4444', fontWeight: 600, fontSize: '0.9rem' }}>{status}</div>}
           
-          <button type="submit" className="at-btn at-mt-12">
-            {isLogin ? '아틀리에 입장' : '파트너 등록 신청'}
+          <button type="submit" className="at-btn at-mt-12" disabled={isLoading}>
+            {isLoading ? (
+              <span className="at-spinner at-spinner-light"></span>
+            ) : (
+              isLogin ? '아틀리에 입장' : '파트너 등록 신청'
+            )}
           </button>
         </form>
 

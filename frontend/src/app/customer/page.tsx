@@ -169,8 +169,13 @@ export default function CustomerPage() {
           <form onSubmit={handleAiProcessing} className="at-flex-row align-start" style={{ gap: '1.5rem', width: '100%' }}>
             
             {/* Custom file upload zone to hide default tooltip */}
-            <div className="at-upload-zone" onClick={triggerFileInput} style={{ flex: 1, cursor: 'pointer' }}>
-              {previewImage ? (
+            <div className="at-upload-zone" onClick={loading ? undefined : triggerFileInput} style={{ flex: 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
+              {loading ? (
+                <div className="at-text-center">
+                  <span className="at-spinner" style={{ width: '3rem', height: '3rem', borderWidth: '4px', marginBottom: '1rem' }}></span>
+                  <p className="at-desc" style={{ fontSize: '0.85rem', fontWeight: 600 }}>실사 이미지 합성 중...</p>
+                </div>
+              ) : previewImage ? (
                 <img src={previewImage} alt="Preview" className="at-img-cover" />
               ) : (
                 <div className="at-text-center" style={{ pointerEvents: 'none' }}>
@@ -185,6 +190,7 @@ export default function CustomerPage() {
                 accept="image/*" 
                 onChange={handleImageChange} 
                 style={{ display: 'none' }}
+                disabled={loading}
               />
             </div>
             
@@ -199,7 +205,11 @@ export default function CustomerPage() {
                 disabled={!selectedTemplate || !myImage || loading}
                 style={{ padding: '1rem', fontSize: '1rem', borderRadius: '1rem' }}
               >
-                {loading ? 'AI 작업 중...' : '✨ AI 실사 렌더링 시작'}
+                {loading ? (
+                  <span className="at-spinner at-spinner-light"></span>
+                ) : (
+                  '✨ AI 실사 렌더링 시작'
+                )}
               </button>
               {status && <p className="at-mt-12 at-text-center" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-at-leather)', marginTop: '0.5rem' }}>{status}</p>}
             </div>
