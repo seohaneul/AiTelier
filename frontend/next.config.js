@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/proxy/:path*',
-        destination: 'https://craftai-backend.onrender.com/:path*',
+        destination: 'https://craft-ai-backend-nu9o.onrender.com/:path*',
       },
     ];
   },

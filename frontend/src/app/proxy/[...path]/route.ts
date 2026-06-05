@@ -21,7 +21,7 @@ export async function OPTIONS(request: NextRequest, { params }: { params: { path
 }
 
 async function proxy(request: NextRequest, path: string[]) {
-  const targetUrl = `https://craftai-backend.onrender.com/${path.join('/')}`;
+  const targetUrl = `https://craft-ai-backend-nu9o.onrender.com/${path.join('/')}`;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
