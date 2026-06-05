@@ -40,7 +40,7 @@ public class TemplateController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<?> updateTemplate(
             @PathVariable Long id,
             @RequestParam("templateName") String templateName,

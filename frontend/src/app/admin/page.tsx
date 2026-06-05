@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Template {
   id: number;
@@ -17,12 +17,29 @@ export default function AdminDashboard() {
   const [editPreview, setEditPreview] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
+  const editFileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const user = localStorage.getItem('username');
     if (user) {
       fetchTemplates(user);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedTemplate) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedTemplate]);
+
+  const triggerEditFileInput = () => {
+    editFileInputRef.current?.click();
+  };
 
   const fetchTemplates = async (userId: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craft-ai-backend-nu9o.onrender.com/api/v1';
@@ -55,7 +72,7 @@ export default function AdminDashboard() {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://craft-ai-backend-nu9o.onrender.com/api/v1';
     try {
       const res = await fetch(`${baseUrl}/templates/${selectedTemplate.id}`, {
-        method: 'PUT',
+        method: 'POST',
         body: formData
       });
 
@@ -128,47 +145,47 @@ export default function AdminDashboard() {
       {selectedTemplate && (
         <div className="at-modal-overlay" onClick={() => setSelectedTemplate(null)}>
           <div className="at-modal-content" onClick={e => e.stopPropagation()}>
-            <div style={{ padding: '4rem' }}>
-              <header className="at-mb-12 at-text-center">
-                <p className="at-desc" style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '1rem' }}>Template Detail</p>
-                <h2 className="serif at-h2" style={{ fontSize: '2.5rem' }}>템플릿 상세 설정</h2>
+            <div style={{ padding: '2rem' }}>
+              <header className="at-mb-12 at-text-center" style={{ marginBottom: '1.5rem' }}>
+                <p className="at-desc" style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Template Detail</p>
+                <h2 className="serif at-h2" style={{ fontSize: '2rem' }}>템플릿 상세 설정</h2>
               </header>
 
-              <form onSubmit={handleUpdate} className="at-flex-col" style={{ gap: '2.5rem' }}>
-                <div className="at-flex-col" style={{ gap: '1rem' }}>
-                  <label className="serif at-h3" style={{ fontSize: '1.1rem' }}>마스터 이미지 교체</label>
-                  <div className="at-upload-zone" style={{ height: '280px', borderRadius: '1.5rem', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.05)' }}>
+              <form onSubmit={handleUpdate} className="at-flex-col" style={{ gap: '1.5rem' }}>
+                <div className="at-flex-col" style={{ gap: '0.75rem' }}>
+                  <label className="serif at-h3" style={{ fontSize: '1rem' }}>마스터 이미지 교체</label>
+                  <div className="at-upload-zone" onClick={triggerEditFileInput} style={{ height: '200px', borderRadius: '1.25rem', cursor: 'pointer', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.05)' }}>
                     <img src={editPreview} alt="Preview" className="at-img-cover" />
-                    <div className="at-absolute-overlay" style={{ opacity: 0, zIndex: 10 }}>
-                      <input
-                        type="file" accept="image/*"
-                        onChange={e => {
-                          const file = e.target.files?.[0];
-                          if (file) { setEditImage(file); setEditPreview(URL.createObjectURL(file)); }
-                        }}
-                        style={{ width: '100%', height: '100%', cursor: 'pointer' }}
-                      />
-                    </div>
+                    <input
+                      type="file" 
+                      ref={editFileInputRef}
+                      accept="image/*"
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        if (file) { setEditImage(file); setEditPreview(URL.createObjectURL(file)); }
+                      }}
+                      style={{ display: 'none' }}
+                    />
                     <div className="at-absolute-overlay" style={{ background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.3s' }}>
-                      <span style={{ color: '#fff', fontWeight: 600 }}>클릭하여 이미지 변경</span>
+                      <span style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>클릭하여 이미지 변경</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="at-flex-col" style={{ gap: '1rem' }}>
-                  <label className="serif at-h3" style={{ fontSize: '1.1rem' }}>템플릿 명칭</label>
+                <div className="at-flex-col" style={{ gap: '0.75rem' }}>
+                  <label className="serif at-h3" style={{ fontSize: '1rem' }}>템플릿 명칭</label>
                   <input
                     type="text" value={editName} onChange={e => setEditName(e.target.value)} required
                     className="at-input"
-                    style={{ fontSize: '1.1rem', padding: '1.5rem' }}
+                    style={{ fontSize: '1rem', padding: '1rem' }}
                   />
                 </div>
 
-                <div className="at-flex-row at-mt-12" style={{ gap: '1rem' }}>
-                  <button type="submit" className="at-btn" disabled={isUpdating} style={{ flex: 2, padding: '1.5rem' }}>
+                <div className="at-flex-row at-mt-12" style={{ gap: '1rem', marginTop: '1rem' }}>
+                  <button type="submit" className="at-btn" disabled={isUpdating} style={{ flex: 2, padding: '1rem', borderRadius: '1rem' }}>
                     {isUpdating ? '저장 중...' : '변경 사항 저장'}
                   </button>
-                  <button type="button" onClick={handleDelete} className="at-btn-outline" style={{ flex: 1, color: '#ef4444', borderColor: '#fee2e2', background: '#fef2f2' }}>
+                  <button type="button" onClick={handleDelete} className="at-btn-outline" style={{ flex: 1, color: '#ef4444', borderColor: '#fee2e2', background: '#fef2f2', padding: '1rem', borderRadius: '1rem' }}>
                     영구 삭제
                   </button>
                 </div>
@@ -177,7 +194,7 @@ export default function AdminDashboard() {
               <button
                 onClick={() => setSelectedTemplate(null)}
                 className="at-desc at-mt-12 at-w-full at-text-center"
-                style={{ fontSize: '0.95rem', fontWeight: 600, textDecoration: 'underline', marginTop: '3rem' }}
+                style={{ fontSize: '0.9rem', fontWeight: 600, textDecoration: 'underline', marginTop: '1.5rem' }}
               >
                 창 닫기
               </button>

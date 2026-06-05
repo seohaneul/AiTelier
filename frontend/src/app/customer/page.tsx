@@ -64,6 +64,17 @@ export default function CustomerPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (showResultModal || showHistoryModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showResultModal, showHistoryModal]);
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -170,12 +181,7 @@ export default function CustomerPage() {
             
             {/* Custom file upload zone to hide default tooltip */}
             <div className="at-upload-zone" onClick={loading ? undefined : triggerFileInput} style={{ flex: 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
-              {loading ? (
-                <div className="at-text-center">
-                  <span className="at-spinner" style={{ width: '3rem', height: '3rem', borderWidth: '4px', marginBottom: '1rem' }}></span>
-                  <p className="at-desc" style={{ fontSize: '0.85rem', fontWeight: 600 }}>실사 이미지 합성 중...</p>
-                </div>
-              ) : previewImage ? (
+              {previewImage ? (
                 <img src={previewImage} alt="Preview" className="at-img-cover" />
               ) : (
                 <div className="at-text-center" style={{ pointerEvents: 'none' }}>
@@ -232,7 +238,7 @@ export default function CustomerPage() {
               history.slice(0, 3).map(item => (
                 <div key={item.id} className="at-history-item" style={{ borderRadius: '0.75rem' }}>
                   <div className="at-history-delete" style={{ width: '24px', height: '24px', fontSize: '0.7rem' }} onClick={() => deleteFromHistory(item.id)}>✕</div>
-                  <img src={item.url} alt="History" className="at-history-img" style={{ height: '100px' }} />
+                  <img src={item.url} alt="History" className="at-history-img" style={{ height: '100px', cursor: 'pointer' }} onClick={() => { setResultImg(item.url); setShowResultModal(true); }} />
                   <div style={{ padding: '0.75rem 0.5rem' }}>
                     <p style={{ fontWeight: 700, fontSize: '0.75rem', marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.templateName}</p>
                     <p className="at-desc" style={{ fontSize: '0.65rem' }}>{item.date}</p>
@@ -258,13 +264,13 @@ export default function CustomerPage() {
       {showResultModal && resultImg && (
         <div className="at-modal-overlay" onClick={() => setShowResultModal(false)}>
           <div className="at-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '680px' }}>
-            <div style={{ padding: '3rem', textAlign: 'center' }}>
+            <div style={{ padding: '2rem', textAlign: 'center' }}>
               <p className="at-desc" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                 Rendering Complete
               </p>
               <h2 className="serif at-h2" style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>실사 렌더링 결과물</h2>
-              <div className="at-rounded-xl overflow-hidden at-mb-12" style={{ border: '1px solid var(--border-at-light)', boxShadow: 'var(--shadow-at-premium)', background: '#fcfcfc' }}>
-                <img src={resultImg} alt="AI Result" className="at-w-full" style={{ display: 'block' }} />
+              <div className="at-rounded-xl overflow-hidden at-mb-12" style={{ border: '1px solid var(--border-at-light)', boxShadow: 'var(--shadow-at-premium)', background: '#fcfcfc', maxHeight: '45vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={resultImg} alt="AI Result" style={{ display: 'block', maxHeight: '45vh', width: 'auto', objectFit: 'contain' }} />
               </div>
               <div className="at-flex-row" style={{ gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
                 <a href={resultImg} download={`${selectedTemplate?.templateName || 'design'}_rendered.png`} className="at-btn" style={{ width: 'auto', padding: '0.75rem 1.5rem', fontSize: '0.95rem', borderRadius: '0.75rem' }}>
@@ -283,7 +289,7 @@ export default function CustomerPage() {
       {showHistoryModal && (
         <div className="at-modal-overlay" onClick={() => setShowHistoryModal(false)}>
           <div className="at-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px' }}>
-            <div style={{ padding: '3rem' }}>
+            <div style={{ padding: '2rem' }}>
               <header className="at-mb-12 at-text-center" style={{ marginBottom: '2rem' }}>
                 <p className="at-desc" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                   Atelier Archive
@@ -294,7 +300,7 @@ export default function CustomerPage() {
                 {history.map(item => (
                   <div key={item.id} className="at-history-item" style={{ boxShadow: 'var(--shadow-at-soft)', borderRadius: '0.75rem' }}>
                     <div className="at-history-delete" style={{ width: '22px', height: '22px', fontSize: '0.7rem' }} onClick={() => deleteFromHistory(item.id)}>✕</div>
-                    <img src={item.url} alt="History" className="at-history-img" style={{ height: '120px' }} />
+                    <img src={item.url} alt="History" className="at-history-img" style={{ height: '120px', cursor: 'pointer' }} onClick={() => { setResultImg(item.url); setShowResultModal(true); }} />
                     <div style={{ padding: '0.75rem 0.5rem' }}>
                       <p style={{ fontWeight: 700, fontSize: '0.75rem', marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.templateName}</p>
                       <p className="at-desc" style={{ fontSize: '0.65rem' }}>{item.date}</p>
